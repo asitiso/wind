@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#091523" />
+  <title>Windrise — 2D Action RPG Vertical Slice</title>
+  <link rel="stylesheet" href="./src/styles.css" />
+</head>
+<body>
+  <main id="app" class="game-shell" aria-label="Windrise 2D 횡스크롤 액션 RPG">
+    <section class="game-frame">
+      <canvas id="game" width="1920" height="1080" aria-label="바람이 잠든 초원 플레이 화면"></canvas>
+      <div id="hud" class="hud" aria-hidden="true">
+        <div class="hud__player">
+          <div class="portrait"><span>LYRIA</span></div>
+          <div class="bars">
+            <div class="hud__name"><b>리아</b><small>LV. 1 · 바람의 검사</small></div>
+            <div class="bar bar--hp"><i id="hpBar"></i></div>
+            <div class="bar bar--stamina"><i id="staminaBar"></i></div>
+            <div class="bar bar--memory"><i id="memoryBar"></i></div>
+          </div>
+        </div>
+        <div id="regionTitle" class="region-title">
+          <small>WINDRISE FRONTIER</small>
+          <strong>바람이 잠든 초원</strong>
+          <span>고대의 길이 다시 숨을 쉰다</span>
+        </div>
+        <div id="eliteBanner" class="elite-banner"><small>ELITE ENCOUNTER</small><strong>폐허의 기사</strong><span>회피와 패링으로 자세를 무너뜨려라</span></div>
+        <div id="miniBossHud" class="mini-boss-hud">
+          <small>RUIN KNIGHT · ELITE</small>
+          <strong>폐허의 기사</strong>
+          <div class="mini-boss-hp"><i id="miniBossHp"></i></div>
+          <div class="mini-boss-poise"><i id="miniBossPoise"></i></div>
+          <span>자세를 무너뜨리면 큰 피해를 줄 수 있습니다</span>
+        </div>
+        <div id="executionPrompt" class="execution-prompt"><kbd>E</kbd><div><small>FINISH</small><strong>처형</strong></div></div>
+        <div id="combatReadout" class="combat-readout">
+          <strong id="comboText">2 HITS</strong>
+          <span id="combatText">PERFECT DODGE · COUNTER READY</span>
+        </div>
+        <div class="quest-card">
+          <small>첫 번째 기억</small>
+          <strong id="questMain">언덕 너머의 무너진 신전으로 향하라</strong>
+          <span id="questSub">빛나는 폐허와 높은 지형을 따라가 보세요.</span>
+        </div>
+        <div class="skills">
+          <div class="skill"><kbd>J</kbd><b>연속베기</b></div>
+          <div class="skill"><kbd>K</kbd><b>강공격</b></div>
+          <div class="skill"><kbd>Q</kbd><b>패링</b></div>
+          <div class="skill"><kbd>⇧</kbd><b id="dashSkillLabel">회피 대시</b></div>
+        </div>
+        <div class="controls">A/D 이동 · SPACE 점프 · J 연속베기/반격 · K 강공격 · Q 패링 · SHIFT 회피/Air Dash · E 처형/상호작용</div>
+        <div id="memoryReveal" class="memory-reveal" aria-live="polite">
+          <div class="memory-reveal__halo"></div>
+          <img src="./assets/generated/memory-wind-swordsman.svg" alt="" />
+          <div class="memory-reveal__copy">
+            <small>WARRIOR MEMORY AWAKENED</small>
+            <strong>바람의 검사 기억</strong>
+            <span>새 이동 능력 · <b>AIR DASH</b></span>
+            <em>공중에서 SHIFT · 착지 시 재충전 · 3연격 마지막 타격이 바람 검기를 방출합니다</em>
+          </div>
+        </div>
+        <div id="interactionPrompt" class="interaction-prompt"></div>
+        <div id="airDashHint" class="air-dash-hint"><small>ABILITY GATE</small><strong>바람의 힘이 필요하다</strong><span>신전의 기억을 얻으면 이 길이 열릴 것 같습니다.</span></div>
+        <div id="upperRuinsHud" class="upper-ruins-hud">
+          <small>UPPER RUINS · WIND CORRIDOR</small><strong>바람의 상층 폐허</strong>
+          <div class="upper-ruins-progress"><i id="upperRuinsProgress"></i></div>
+          <span id="upperRuinsFragments">바람의 잔향 0 / 3</span>
+        </div>
+
+      </div>
+      <div id="loading" class="loading"><div class="loading__mark">✦</div><strong>WINDRISE</strong><span>고대의 바람을 불러오는 중…</span></div>
+    <div id="sceneCurtain" class="scene-curtain" aria-hidden="true"><span>✦</span></div>
+    </section>
+  </main>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createCombatControlRuntime,beginCombatControlFrame,endCombatControlFrame,resetCombatControlRuntime,combatControlDebug} from '../src/game/CombatControlIntegration.js';
+
+const raw=(pressed=[])=>{const set=new Set(pressed);return {justPressed:a=>set.has(a),isDown:()=>false,justReleased:()=>false};};
+const idle=()=>({hp:320,onGround:true,vy:0,dash:0,dodgeWindow:0,reaction:{state:'idle'},recovery:{state:'ready'},combat:{attack:null,attackTime:0,counterWindow:0,parryTimer:0,queuedLight:false}});
+const data={startup:.08,active:.1,recovery:.22,cancelStart:.2,cancelEnd:.38};
+
+test('idle light releases in same frame',()=>{const b=beginCombatControlFrame(createCombatControlRuntime(),raw(['light']),.016,{player:idle(),attackData:data});assert.equal(b.action,'light');assert.equal(b.input.justPressed('light'),true);});
+test('early recovery input remains buffered instead of firing',()=>{const p=idle();p.combat.attack='light';p.combat.attackTime=.05;const b=beginCombatControlFrame(createCombatControlRuntime(),raw(['heavy']),.016,{player:p,attackData:data});assert.equal(b.action,null);assert.ok(b.runtime.buffer.entries.heavy);});
+test('buffered heavy releases when cancel window opens',()=>{let p=idle();p.combat.attack='light';p.combat.attackTime=.05;let b=beginCombatControlFrame(createCombatControlRuntime(),raw(['heavy']),.016,{player:p,attackData:data});p={...p,combat:{...p.combat,attackTime:.26}};b=beginCombatControlFrame(b.runtime,raw([]),.05,{player:p,attackData:data});assert.equal(b.action,'heavy');});
+test('accepted action is consumed and feeds combo flow',()=>{const before=idle();let b=beginCombatControlFrame(createCombatControlRuntime(),raw(['light']),.016,{player:before,attackData:data});const after={...before,combat:{...before.combat,attack:'light',attackTime:.01}};const end=endCombatControlFrame(b.runtime,before,after);assert.equal(Object.keys(end.buffer.entries).length,0);assert.equal(end.combo.lastAccepted,'light');});
+test('rejected action remains briefly pending',()=>{const before=idle();let b=beginCombatControlFrame(createCombatControlRuntime(),raw(['dash']),.016,{player:before,attackData:data});const end=endCombatControlFrame(b.runtime,before,before);assert.ok(end.buffer.entries.dash);});
+test('parry moment makes heavy counter branch win when both buffered',()=>{const p=idle();p.combat.counterWindow=.4;const b=beginCombatControlFrame(createCombatControlRuntime(),raw(['light','heavy']),.016,{player:p,attackData:data,momentType:'parry'});assert.equal(b.action,'heavy');});
+test('dodge moment makes light counter branch win',()=>{const p=idle();p.combat.counterWindow=.4;const b=beginCombatControlFrame(createCombatControlRuntime(),raw(['light','heavy']),.016,{player:p,attackData:data,momentType:'dodge'});assert.equal(b.action,'light');});
+test('transition lock preserves press until TTL rather than injecting into cinematic',()=>{const b=beginCombatControlFrame(createCombatControlRuntime(),raw(['light']),.016,{player:idle(),attackData:data,transitionLocked:true});assert.equal(b.action,null);assert.ok(b.runtime.buffer.entries.light);});
+test('reset clears buffer and combo intent',()=>{let r=createCombatControlRuntime();r.buffer.entries.light={action:'light',ttl:.1,serial:1};r.combo.chain=['light'];r.combo.grace=.5;r=resetCombatControlRuntime(r,'death');assert.deepEqual(r.combo.chain,[]);assert.equal(Object.keys(r.buffer.entries).length,0);});
+test('debug surface is non-gameplay and compact',()=>{const d=combatControlDebug(createCombatControlRuntime());assert.deepEqual(d,{leased:null,combo:null,pending:[]});});

@@ -1,0 +1,21 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {compressShake,dynamicParticleBudget,visibleParticles,presentationMode,readabilityPolicy,PRESENTATION_POLISH} from '../src/game/PresentationPolish.js';
+
+test('shake cap remains 30',()=>assert.equal(compressShake(999),30));
+test('small shake is compressed',()=>assert.equal(compressShake(8),6));
+test('exploration budget is legacy 104',()=>assert.equal(dynamicParticleBudget({mode:'exploration'}),104));
+test('combat budget is lower',()=>assert.equal(dynamicParticleBudget({mode:'combat'}),96));
+test('boss budget is lower than combat',()=>assert.equal(dynamicParticleBudget({mode:'boss'}),88));
+test('story budget is 68',()=>assert.equal(dynamicParticleBudget({mode:'story'}),68));
+test('many threats reduce budget',()=>assert.ok(dynamicParticleBudget({mode:'combat',threatCount:6})<96));
+test('precision moment caps clutter',()=>assert.ok(dynamicParticleBudget({mode:'combat',moment:'parry'})<=84));
+test('final strike reserves enough current fx',()=>assert.ok(dynamicParticleBudget({mode:'boss',moment:'finalStrike',threatCount:8})>=112));
+test('budgets stay bounded',()=>{for(let n=0;n<20;n++)assert.ok(dynamicParticleBudget({mode:'combat',threatCount:n})>=PRESENTATION_POLISH.minParticleBudget);});
+test('numeric legacy budget keeps newest exact order',()=>{const p=[0,1,2,3,4].map(id=>({id}));assert.deepEqual(visibleParticles(p,3).map(x=>x.id),[2,3,4]);});
+test('context selection never exceeds budget',()=>{const p=Array.from({length:200},(_,i)=>({id:i,type:i%7===0?'hit':'dust'}));const out=visibleParticles(p,{mode:'boss',threatCount:6});assert.ok(out.length<=dynamicParticleBudget({mode:'boss',threatCount:6}));});
+test('priority selection preserves recent hit particles',()=>{const p=Array.from({length:150},(_,i)=>({id:i,type:i===149?'hit':'ambient'}));const out=visibleParticles(p,{mode:'story'});assert.ok(out.some(x=>x.id===149));});
+test('story wins presentation mode',()=>assert.equal(presentationMode({story:true,boss:true,combat:true}),'story'));
+test('boss wins combat',()=>assert.equal(presentationMode({boss:true,combat:true}),'boss'));
+test('readability preserves telegraphs',()=>assert.equal(readabilityPolicy({mode:'combat',threatCount:9}).preserveTelegraphs,true));
+test('high focus lowers HUD opacity',()=>assert.ok(readabilityPolicy({mode:'combat',moment:'parry'}).hudOpacity<1));
+test('many threats request decorative reduction',()=>assert.equal(readabilityPolicy({mode:'combat',threatCount:5}).reduceDecorativeFx,true));

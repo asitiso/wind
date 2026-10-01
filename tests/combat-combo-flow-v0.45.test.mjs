@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {emptyComboFlow,stepComboFlow,recordAcceptedCombatAction,comboPattern,comboInputPriority,comboFlowHint,COMBO_GRACE} from '../src/game/CombatComboFlow.js';
+
+test('L-L-L recognized',()=>{let s=emptyComboFlow();for(const a of ['light','light','light'])s=recordAcceptedCombatAction(s,a);assert.equal(s.lastPattern,'L-L-L');});
+test('L-L-H recognized',()=>{let s=emptyComboFlow();for(const a of ['light','light','heavy'])s=recordAcceptedCombatAction(s,a);assert.equal(s.lastPattern,'L-L-H');});
+test('L-H recognized',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'light');s=recordAcceptedCombatAction(s,'heavy');assert.equal(s.lastPattern,'L-H');});
+test('H-H recognized',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'heavy');s=recordAcceptedCombatAction(s,'heavy');assert.equal(s.lastPattern,'H-H');});
+test('Dash-L recognized',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'dash');s=recordAcceptedCombatAction(s,'light',{dashActive:true});assert.equal(s.lastPattern,'DASH-L');});
+test('Perfect Dodge-L recognized from moment source',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'light',{momentType:'dodge'});assert.equal(s.lastPattern,'DODGE-L');});
+test('Parry-H recognized from moment source',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'heavy',{momentType:'parry'});assert.equal(s.lastPattern,'PARRY-H');});
+test('combo grace expires and clears chain',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'light');s=stepComboFlow(s,COMBO_GRACE+.01);assert.deepEqual(s.chain,[]);});
+test('partial combo hint remains useful',()=>{const s=recordAcceptedCombatAction(emptyComboFlow(),'light');assert.deepEqual(comboFlowHint(s).label,'L');});
+test('completed combo hint is marked complete',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'light');s=recordAcceptedCombatAction(s,'heavy');assert.equal(comboFlowHint(s).complete,true);});
+test('parry counter prioritizes heavy',()=>{const p=comboInputPriority(emptyComboFlow(),{counterWindow:.4,momentType:'parry'});assert.equal(p[0],'heavy');});
+test('dodge counter prioritizes light',()=>{const p=comboInputPriority(emptyComboFlow(),{counterWindow:.4,momentType:'dodge'});assert.equal(p[0],'light');});
+test('dash starter prioritizes light follow-up',()=>{const s=recordAcceptedCombatAction(emptyComboFlow(),'dash');assert.equal(comboInputPriority(s)[0],'light');});
+test('after light, branch heavy has priority over another light',()=>{const s=recordAcceptedCombatAction(emptyComboFlow(),'light');const p=comboInputPriority(s);assert.ok(p.indexOf('heavy')<p.indexOf('light'));});
+test('after heavy, heavy follow-up remains available before light',()=>{const s=recordAcceptedCombatAction(emptyComboFlow(),'heavy');const p=comboInputPriority(s);assert.ok(p.indexOf('heavy')<p.indexOf('light'));});
+test('pattern lookup is deterministic',()=>{assert.equal(comboPattern(['light','light','heavy']),'L-L-H');assert.equal(comboPattern(['jump','light']),null);});

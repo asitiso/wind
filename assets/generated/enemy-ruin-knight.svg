@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="500" viewBox="0 0 300 500">
+  <defs>
+    <linearGradient id="iron" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c8c4b7"/><stop offset=".38" stop-color="#676b70"/><stop offset=".72" stop-color="#313840"/><stop offset="1" stop-color="#171c23"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0d48a"/><stop offset=".55" stop-color="#a7833d"/><stop offset="1" stop-color="#57431f"/></linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b53c43"/><stop offset="1" stop-color="#4b1218"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="11" stdDeviation="8" flood-color="#000" flood-opacity=".55"/></filter>
+    <filter id="glow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M136 182 C87 188 58 225 18 274 C74 273 93 302 50 356 C105 344 143 315 174 269Z" fill="url(#red)" stroke="#3b0d12" stroke-width="7"/>
+    <path d="M114 325 L92 430 L67 483 L107 490 L145 436 L157 340Z" fill="#242a32" stroke="#0f141a" stroke-width="8"/>
+    <path d="M171 329 L194 433 L224 480 L266 465 L233 420 L218 339Z" fill="#20262d" stroke="#0f141a" stroke-width="8"/>
+    <path d="M87 213 C112 182 188 177 218 208 L229 334 C184 359 122 359 78 329Z" fill="url(#iron)" stroke="#202730" stroke-width="9"/>
+    <path d="M79 275 L230 275" stroke="#201516" stroke-width="23"/>
+    <path d="M96 206 Q123 174 154 198 L142 254 Q108 252 86 233Z" fill="url(#iron)" stroke="#303940" stroke-width="8"/>
+    <path d="M196 194 Q229 178 247 216 L231 250 Q203 247 187 230Z" fill="url(#iron)" stroke="#303940" stroke-width="8"/>
+    <path d="M108 137 C108 77 154 48 203 67 C234 79 248 111 239 149 L220 191 L132 190Z" fill="url(#iron)" stroke="#202730" stroke-width="9"/>
+    <path d="M107 126 L240 126" stroke="#11161c" stroke-width="19"/>
+    <path d="M138 126 L153 114 L168 126 L184 113 L203 126" fill="none" stroke="#e8dfc2" stroke-width="5"/>
+    <path d="M151 69 L173 15 L194 70" fill="url(#gold)" stroke="#5b4523" stroke-width="7"/>
+    <path d="M132 83 L98 34 L112 101" fill="url(#iron)" stroke="#242b32" stroke-width="7"/>
+    <path d="M213 82 L249 38 L235 104" fill="url(#iron)" stroke="#242b32" stroke-width="7"/>
+    <path d="M157 145 L169 130 L182 145 L195 130 L209 145" fill="none" stroke="#d9b968" stroke-width="5" filter="url(#glow)"/>
+    <circle cx="181" cy="145" r="5" fill="#f4d77e" filter="url(#glow)"/>
+    <path d="M210 229 C241 244 260 278 270 312" fill="none" stroke="#6c7379" stroke-width="24" stroke-linecap="round"/>
+    <path d="M264 302 L287 338" stroke="#4c3226" stroke-width="17" stroke-linecap="round"/>
+    <g transform="rotate(-24 266 329)">
+      <path d="M267 326 L289 350" stroke="#7e6337" stroke-width="15" stroke-linecap="round"/>
+      <path d="M281 348 L247 364" stroke="#d1b86e" stroke-width="10" stroke-linecap="round"/>
+      <path d="M286 353 L204 484 L226 495 L305 366Z" fill="url(#iron)" stroke="#6d747b" stroke-width="7"/>
+      <path d="M288 361 L217 478" stroke="#fff5d8" stroke-width="3" opacity=".72"/>
+    </g>
+    <path d="M122 237 L149 311 L180 237 L205 316" fill="none" stroke="#b5944d" stroke-width="6" opacity=".9"/>
+  </g>
+</svg>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="560" viewBox="0 0 360 560">
+  <defs>
+    <linearGradient id="hair" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5fbff"/><stop offset=".5" stop-color="#cad8e4"/><stop offset="1" stop-color="#8295a7"/></linearGradient>
+    <linearGradient id="cape" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d13b49"/><stop offset=".55" stop-color="#9c2032"/><stop offset="1" stop-color="#501522"/></linearGradient>
+    <linearGradient id="armor" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".45" stop-color="#dfe8ee"/><stop offset="1" stop-color="#8c9aa6"/></linearGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".3" stop-color="#bfe7ff"/><stop offset=".7" stop-color="#778c9f"/><stop offset="1" stop-color="#eefaff"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#05101d" flood-opacity=".42"/></filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <!-- cape -->
+    <path d="M164 187 C118 190 76 219 35 252 C79 261 72 292 17 337 C82 334 126 311 166 278 C186 256 190 219 164 187Z" fill="url(#cape)" stroke="#5d1420" stroke-width="5"/>
+    <path d="M121 211 C89 235 66 250 39 259" fill="none" stroke="#f06c75" stroke-width="4" opacity=".45"/>
+    <!-- back hair strands -->
+    <path d="M160 139 C106 136 90 180 45 186 C77 207 115 199 151 177Z" fill="url(#hair)" stroke="#8193a4" stroke-width="4"/>
+    <path d="M162 151 C105 169 88 220 44 222 C86 239 125 216 161 190Z" fill="url(#hair)" stroke="#8193a4" stroke-width="4" opacity=".96"/>
+    <path d="M160 165 C121 205 117 243 79 259 C126 260 156 234 177 196Z" fill="url(#hair)" stroke="#8193a4" stroke-width="4" opacity=".9"/>
+    <!-- legs / boots -->
+    <path d="M157 363 L134 473 L115 529 L145 538 L177 479 L197 383Z" fill="#242b34" stroke="#10161f" stroke-width="5"/>
+    <path d="M206 369 L226 476 L246 525 L278 517 L258 463 L244 377Z" fill="#202730" stroke="#10161f" stroke-width="5"/>
+    <path d="M109 526 C118 513 137 515 151 529 L150 543 L100 542Z" fill="#4a342d" stroke="#1f1818" stroke-width="5"/>
+    <path d="M242 516 C257 506 279 508 292 523 L289 538 L245 538Z" fill="#4a342d" stroke="#1f1818" stroke-width="5"/>
+    <!-- skirt -->
+    <path d="M142 321 L238 321 L263 391 L210 405 L174 398 L126 386Z" fill="#f2f4f4" stroke="#6d7880" stroke-width="5"/>
+    <path d="M145 333 L239 333" stroke="#a61f32" stroke-width="10"/>
+    <!-- torso -->
+    <path d="M147 211 C168 195 218 194 239 216 L247 319 C215 338 170 337 139 317Z" fill="url(#armor)" stroke="#66737e" stroke-width="6"/>
+    <path d="M167 220 L190 306 L146 301 L143 236Z" fill="#f7fbfe" opacity=".76"/>
+    <path d="M195 208 L201 328" stroke="#7f8d97" stroke-width="5" opacity=".65"/>
+    <path d="M135 291 L253 291" stroke="#55372e" stroke-width="17"/>
+    <rect x="184" y="281" width="31" height="27" rx="4" fill="#d1a95e" stroke="#5f482b" stroke-width="4"/>
+    <!-- left arm / glove -->
+    <path d="M147 234 C128 248 117 273 111 298" fill="none" stroke="#ecd1be" stroke-width="22" stroke-linecap="round"/>
+    <path d="M111 292 L92 327" fill="none" stroke="#4c342b" stroke-width="18" stroke-linecap="round"/>
+    <!-- sword -->
+    <g transform="rotate(-7 94 326)">
+      <path d="M111 321 L86 345" stroke="#43322b" stroke-width="18" stroke-linecap="round"/>
+      <path d="M96 338 L72 316" stroke="#c8a96b" stroke-width="10" stroke-linecap="round"/>
+      <path d="M84 347 L-3 506 L18 515 L112 358Z" fill="url(#steel)" stroke="#5a6a78" stroke-width="5"/>
+      <path d="M92 354 L9 499" stroke="#ffffff" stroke-width="3" opacity=".82"/>
+    </g>
+    <!-- right arm -->
+    <path d="M236 238 C257 255 266 276 267 302" fill="none" stroke="#ecd1be" stroke-width="22" stroke-linecap="round"/>
+    <path d="M266 296 L273 326" fill="none" stroke="#4b342c" stroke-width="18" stroke-linecap="round"/>
+    <!-- neck -->
+    <rect x="175" y="177" width="40" height="44" rx="16" fill="#f0d1bd"/>
+    <!-- head -->
+    <ellipse cx="196" cy="138" rx="62" ry="69" fill="#f5d7c4" stroke="#8f7880" stroke-width="4"/>
+    <!-- front hair -->
+    <path d="M137 140 C135 64 201 48 249 82 C265 95 270 123 257 154 C243 125 230 110 213 96 C201 128 177 151 140 161Z" fill="url(#hair)" stroke="#8193a4" stroke-width="5"/>
+    <path d="M177 74 C164 119 144 139 120 147 C132 100 147 80 177 74Z" fill="#f4fbff" opacity=".95"/>
+    <path d="M210 78 C215 113 232 134 260 146 C257 103 240 82 210 78Z" fill="#d8e4ed"/>
+    <!-- face -->
+    <path d="M214 137 Q225 130 236 137" fill="none" stroke="#576879" stroke-width="5" stroke-linecap="round"/>
+    <ellipse cx="229" cy="140" rx="5" ry="8" fill="#3e617f"/>
+    <path d="M230 162 Q218 170 208 163" fill="none" stroke="#a66e6e" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+    <!-- shoulder armor -->
+    <path d="M135 218 Q155 190 179 209 L168 248 Q143 247 127 235Z" fill="url(#armor)" stroke="#66737e" stroke-width="5"/>
+    <path d="M231 209 Q256 195 273 222 L261 246 Q240 245 228 236Z" fill="url(#armor)" stroke="#66737e" stroke-width="5"/>
+    <!-- memory sigil -->
+    <path d="M198 233 l10 16 -10 16 -10-16Z" fill="none" stroke="#79d6ff" stroke-width="4"/>
+  </g>
+</svg>

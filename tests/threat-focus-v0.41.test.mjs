@@ -1,0 +1,25 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {enemyThreatProgress,threatScore,normalizeThreatIntensity,selectPrimaryThreat,createThreatFocusRuntime,stepThreatFocus,threatFocusCameraOptions,threatFocusSignal,threatParryState} from '../src/game/ThreatFocusDirector.js';
+const p={x:500,y:700};
+const enemy=(id,x,state='idle',extra={})=>({id,x,y:700,state,...extra});
+test('dead enemy is ignored',()=>assert.equal(threatScore({...enemy('a',550),dead:true},p),-Infinity));
+test('explicit threat progress is used',()=>assert.equal(enemyThreatProgress(enemy('a',550,'windup',{threatProgress:.73})),.73));
+test('windup duration derives progress',()=>assert.equal(enemyThreatProgress(enemy('a',550,'windup',{stateTime:.5,windupDuration:1})),.5));
+test('windup scores above idle at same distance',()=>assert.ok(threatScore(enemy('a',600,'windup',{threatProgress:.5}),p)>threatScore(enemy('b',600),p)));
+test('guard break increases threat',()=>assert.ok(threatScore(enemy('a',600,'windup',{guardBreak:true}),p)>threatScore(enemy('b',600,'windup'),p)));
+test('boss increases threat',()=>assert.ok(threatScore({...enemy('a',600),type:'guardian'},p)>threatScore(enemy('b',600),p)));
+test('near threat outranks far idle',()=>assert.ok(threatScore(enemy('a',550),p)>threatScore(enemy('b',1400),p)));
+test('normalize clamps',()=>{assert.equal(normalizeThreatIntensity(-5),0);assert.equal(normalizeThreatIntensity(9),1);});
+test('primary selects attacking enemy over slightly nearer idle',()=>{const r=selectPrimaryThreat([enemy('near',560),enemy('attack',680,'windup',{threatProgress:.8})],p);assert.equal(r.enemy.id,'attack');});
+test('empty primary is null',()=>assert.equal(selectPrimaryThreat([],p),null));
+test('runtime picks target',()=>{const r=stepThreatFocus(createThreatFocusRuntime(),[enemy('a',600,'windup',{threatProgress:.8})],p,.016);assert.equal(r.targetId,'a');});
+test('runtime increments serial on switch',()=>{let r=stepThreatFocus(createThreatFocusRuntime(),[enemy('a',600)],p,.016);const s=r.serial;r=stepThreatFocus({...r,hold:0},[enemy('b',510,'windup',{threatProgress:1})],p,.2);assert.ok(r.serial>s);});
+test('hold prevents immediate jitter switch',()=>{let r=stepThreatFocus(createThreatFocusRuntime(),[enemy('a',580,'windup',{threatProgress:.7})],p,.016);r=stepThreatFocus(r,[enemy('a',580,'windup',{threatProgress:.7}),enemy('b',570,'windup',{threatProgress:.72})],p,.02);assert.equal(r.targetId,'a');});
+test('large margin can switch after hold',()=>{let r=stepThreatFocus(createThreatFocusRuntime(),[enemy('a',1000)],p,.016);r={...r,hold:0};r=stepThreatFocus(r,[enemy('a',1000),enemy('b',520,'windup',{threatProgress:1,guardBreak:true})],p,.3);assert.equal(r.targetId,'b');});
+test('camera options include focusX',()=>{const r=stepThreatFocus(createThreatFocusRuntime(),[enemy('a',700,'windup',{threatProgress:.8})],p,.016);assert.equal(threatFocusCameraOptions(r).focusX,700);});
+test('urgent signal on late windup',()=>{const r=stepThreatFocus(createThreatFocusRuntime(),[enemy('a',600,'windup',{threatProgress:.9})],p,.016);assert.equal(threatFocusSignal(r).urgent,true);});
+test('unknown parryability stays neutral instead of defaulting safe',()=>{const r=stepThreatFocus(createThreatFocusRuntime(),[enemy('a',600,'windup',{threatProgress:.9})],p,.016);const s=threatFocusSignal(r);assert.equal(s.parryState,'unknown');assert.equal(s.parryable,false);assert.equal(s.guardBreak,false);});
+test('unparryable signal maps guard break',()=>{const r=stepThreatFocus(createThreatFocusRuntime(),[enemy('a',600,'windup',{threatProgress:.9,parryable:false})],p,.016);assert.equal(threatFocusSignal(r).guardBreak,true);});
+test('no target signal inactive',()=>assert.equal(threatFocusSignal(createThreatFocusRuntime()).active,false));
+
+test('threat parry state is explicit-only',()=>{assert.equal(threatParryState({parryable:true}),'parryable');assert.equal(threatParryState({parryable:false}),'danger');assert.equal(threatParryState({guardBreak:true}),'danger');assert.equal(threatParryState({}),'unknown');});

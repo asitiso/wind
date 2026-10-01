@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {inferMobilitySource,mobilityComboSource,mobilityFollowPriority,mobilitySnapshot} from '../src/game/CombatMobilityFlow.js';
+import {emptyComboFlow,recordAcceptedCombatAction,comboPattern,comboInputPriority} from '../src/game/CombatComboFlow.js';
+
+test('dodge window increase classifies dodge',()=>assert.equal(inferMobilitySource({dodgeWindow:0,dash:0},{dodgeWindow:.15,dash:.1}),'dodge'));
+test('air dash takes precedence over generic dash',()=>assert.equal(inferMobilitySource({airDashActive:0,dash:0},{airDashActive:.2,dash:.2,dodgeWindow:.1}),'airDash'));
+test('plain dash remains dash',()=>assert.equal(inferMobilitySource({dash:0},{dash:.18}),'dash'));
+test('no movement delta yields null source',()=>assert.equal(inferMobilitySource({dash:.1,dodgeWindow:.1},{dash:.1,dodgeWindow:.1}),null));
+test('air dash shares dash combo source',()=>assert.equal(mobilityComboSource('airDash'),'dash'));
+test('dodge follow priority favors light',()=>assert.equal(mobilityFollowPriority('dodge')[0],'light'));
+test('air dash follow priority favors light then heavy',()=>assert.deepEqual(mobilityFollowPriority('airDash').slice(0,2),['light','heavy']));
+test('accepted dodge action seeds dodge combo chain',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'dash',{mobilitySource:'dodge'});assert.deepEqual(s.chain,['dodge']);});
+test('accepted dash action seeds dash combo chain',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'dash',{mobilitySource:'dash'});assert.deepEqual(s.chain,['dash']);});
+test('dodge light resolves DODGE-L',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'dash',{mobilitySource:'dodge'});s=recordAcceptedCombatAction(s,'light');assert.equal(s.lastPattern,'DODGE-L');});
+test('dodge heavy resolves DODGE-H',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'dash',{mobilitySource:'dodge'});s=recordAcceptedCombatAction(s,'heavy');assert.equal(s.lastPattern,'DODGE-H');});
+test('dash heavy resolves DASH-H',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'dash',{mobilitySource:'dash'});s=recordAcceptedCombatAction(s,'heavy');assert.equal(s.lastPattern,'DASH-H');});
+test('dash light heavy resolves branch finisher',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'dash',{mobilitySource:'dash'});s=recordAcceptedCombatAction(s,'light');s=recordAcceptedCombatAction(s,'heavy');assert.equal(s.lastPattern,'DASH-L-H');});
+test('dodge light heavy resolves branch finisher',()=>{let s=recordAcceptedCombatAction(emptyComboFlow(),'dash',{mobilitySource:'dodge'});s=recordAcceptedCombatAction(s,'light');s=recordAcceptedCombatAction(s,'heavy');assert.equal(s.lastPattern,'DODGE-L-H');});
+test('mobility snapshot reports useful diagnostic',()=>assert.equal(mobilitySnapshot({dash:0},{dash:.2,onGround:true}).source,'dash'));

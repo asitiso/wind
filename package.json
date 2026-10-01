@@ -1,0 +1,11 @@
+{
+  "name": "windrise-side-scroll-rpg",
+  "version": "0.5.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check src/main.js && node --check src/game/Game.js && node --check src/game/Renderer.js && node --check src/game/Player.js && node --check src/game/Combat.js && node --check src/game/CameraDirector.js && node --check src/game/AnimationState.js && node --check src/game/AnimationClips.js && node --check src/game/Terrain.js && node --check src/game/EnemyAI.js && node --check src/game/Progression.js && node --check src/game/UpperRuins.js && node --check src/game/WindMemoryStyle.js"
+  }
+}
